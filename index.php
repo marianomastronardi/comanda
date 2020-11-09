@@ -6,10 +6,12 @@ use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Routing\RouteCollectorProxy;
-use Recursos\Persona;
 use Seguridad\iToken;
 use Slim\Factory\AppFactory;
 use App\Controllers\PersonaController;
+use App\Controllers\SocioController;
+use App\Controllers\EmpleadoController;
+use App\Controllers\PedidoController;
 use Config\Database;
 use Illuminate\Container\Container;
 
@@ -21,69 +23,34 @@ $app->addBodyParsingMiddleware();
 $app->setBasePath("/ProgramacionIII-3C/Comanda");
 new Database();
 
-/** Grupo /login */
-/* $app->group('/login', function (RouteCollectorProxy $group) {
-    $group->get('', function (Request $request, Response $response, $args) {
-        //$response->getBody()->write("Hello world from GET!");
-        $query = $request->getQueryParams();
-        $user = Usuario::getUser($query['email']);
-        if ($user) {
-            if (!password_verify($query['password'], $user["clave"])) {
-                echo "Contraseña incorrecta";
-            } else {
-                $response->getBody()->write(Usuario::getToken($query['email'], $query['password']));
-            }
-        } else {
-            return json_encode(array('message' => 'El email no existe'));
-        }
-        return $response;
-    });
-
-    $group->post('', function (Request $request, Response $response, $args) {
-        //$response->getBody()->write("Hello world from GET!");
-        $body = $request->getParsedBody();
-        $user = Usuario::getUser($body['email']);
-        //var_dump($user);
-        if ($user) {
-            if (!password_verify($body['password'], $user["clave"])) {
-                echo "Contraseña incorrecta";
-            } else {
-                $response->getBody()->write(Usuario::getToken($body['email'], $body['password']));
-            }
-        } else {
-            return json_encode(array('message' => 'El email no existe'));
-        }
-        return $response;
-    });
-});
- */
-/** Grupo /usuarios */
-/* $app->group('/usuarios', function (RouteCollectorProxy $group) {
-    $group->post('', function (Request $request, Response $response, $args) {
-        //$response->getBody()->write("Hello world from POST!");
-        $body = $request->getParsedBody();
-        $response->getBody()->write(Usuario::Save($body["email"], $body["password"]));
-        //echo $response;
-        return $response->withHeader('Content-Type', 'application/json');
-    });
-
-    $group->get('/{email}', function (Request $request, Response $response, $args) {
-        $user = Usuario::getUser($args["email"]);
-        $response->getBody()->write(json_encode(new Usuario($user['email'], $user['clave'])));
-        return $response->withHeader('Content-Type', 'application/json');
-    });
+/** Grupo /pedidos */
+$app->group('/pedidos', function (RouteCollectorProxy $group) {
+    $group->get('', PedidoController::class . ':getAll');
+    $group->post('', PedidoController::class . ':add');
+    //$group->get('/{id}', PedidoController::class . ":getOneById");
+    $group->get('/{sector_id}', PedidoController::class . ":getBySection");
+    $group->put('/{id}', PedidoController::class . ":setOrder");
+    $group->delete('/{id}', PedidoController::class . ":remove");
 });
 
-$app->post('/productos', function (Request $request, Response $response, $args) {
-    $params = $request->getServerParams();
-    $token = $params['HTTP_TOKEN'] ?? null;
-    if ($token) {
-        if (iToken::decodeUserToken($token)) {
-            echo 'Signature valid';
-        }
-    }
-    return $response;
-}); */
+/** Grupo /empleados */
+ $app->group('/empleados', function (RouteCollectorProxy $group) {
+    $group->get('', EmpleadoController::class . ':getAll');
+    $group->post('', EmpleadoController::class . ':add');
+    $group->get('/{id}', EmpleadoController::class . ":getOneById");
+    $group->get('/{nombre}/[{apellido}]', EmpleadoController::class . ":getOneByName");
+    $group->put('/{id}', EmpleadoController::class . ":edit");
+    $group->delete('/{id}', EmpleadoController::class . ":remove");
+});
+ 
+/** Grupo /socios */
+ $app->group('/socios', function (RouteCollectorProxy $group) {
+    $group->post('', SocioController::class . ':add');
+    $group->get('',  SocioController::class . ":getAll");
+    $group->get('/{id}', SocioController::class . ":getOneById");
+    $group->get('/{nombre}/[{apellido}]', SocioController::class . ":getOneByName");
+    $group->put('/{id}', SocioController::class . ":edit");
+});
 
 /** Grupo /personas */
  $app->group('/personas', function (RouteCollectorProxy $group) {
@@ -95,15 +62,16 @@ $app->post('/productos', function (Request $request, Response $response, $args) 
 }); 
 
 $app->run(); 
+/*
+$app->post('/productos', function (Request $request, Response $response, $args) {
+    $params = $request->getServerParams();
+    $token = $params['HTTP_TOKEN'] ?? null;
+    if ($token) {
+        if (iToken::decodeUserToken($token)) {
+            echo 'Signature valid';
+        }
+    }
+    return $response;
+}); */
 
-/* use Seguridad\Usuario;
-use Seguridad\iToken;
-
-$user = new Usuario('magama', '123');
-
-$user->name = 'Mariano';
-echo $user->name; */
-/* $method = $request->getMethod();
-echo $method;
-$group->get('/{id}', UserController::class . ":getOne");
- */ 
+?>

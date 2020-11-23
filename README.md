@@ -22,4 +22,9 @@ https://ar.000webhost.com/
 https://www.slimframework.com/docs/v4
 https://github.com/firebase/php-jwt
 
-r1P&lujKftWUvpJtjEX&
+pass site y!liriaSNnoHGhzJouCg
+
+db pass i)Id80B(W>pu#IdB
+
+nombre DB id15484588_comanda
+usuario DB id15484588_root

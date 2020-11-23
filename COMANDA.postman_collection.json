@@ -1,0 +1,1065 @@
+{
+	"info": {
+		"_postman_id": "9f4f0239-6dee-4bac-b7d9-60f343351e35",
+		"name": "COMANDA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Personas",
+			"item": [
+				{
+					"name": "/personas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{comanda}}personas",
+							"host": [
+								"{{comanda}}personas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/personas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Marcos",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Reina",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mreina@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}personas",
+							"host": [
+								"{{comanda}}personas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/personas/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/personas/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"personas",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/personas/{nombre}/{apellido}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/personas/Mariano/Mastronardi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"personas",
+								"Mariano",
+								"Mastronardi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/personas/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Luis",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Suarez",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/personas/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"personas",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Socios",
+			"item": [
+				{
+					"name": "/socios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Mr",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Socio",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "socio@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}socios",
+							"host": [
+								"{{comanda}}socios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/socios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/socios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"socios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/socios/{id}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}socios/2",
+							"host": [
+								"{{comanda}}socios"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/socios/{nombre}/{apellido}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/socios/Mauricio/Davila",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"socios",
+								"Mauricio",
+								"Davila"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/socios/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Julian",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "apellido",
+									"value": "D'avila",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}socios/1",
+							"host": [
+								"{{comanda}}socios"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Empleados",
+			"item": [
+				{
+					"name": "/empleados",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Mister",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Cook",
+									"type": "text"
+								},
+								{
+									"key": "sector_id",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "puesto_id",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "cocinero@gmail.com",
+									"type": "text"
+								}
+							],
+							"options": {
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{comanda}}empleados",
+							"host": [
+								"{{comanda}}empleados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/empleados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/empleados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"empleados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/empleados/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/empleados/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"empleados",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/empleados/{nombre}/{apellido}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/empleados/Juan/Perez",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"empleados",
+								"Juan",
+								"Perez"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/empleados/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/ProgramacionIII-3C/Comanda/empleados/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"ProgramacionIII-3C",
+								"Comanda",
+								"empleados",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Pedidos",
+			"item": [
+				{
+					"name": "Items",
+					"item": [
+						{
+							"name": "/item/{item_id}",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{cocinero}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "delivery_time",
+											"value": "18",
+											"type": "text"
+										}
+									],
+									"options": {
+										"urlencoded": {}
+									}
+								},
+								"url": {
+									"raw": "{{comanda}}item/2",
+									"host": [
+										"{{comanda}}item"
+									],
+									"path": [
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/item",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{mozo}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "pedido_id",
+											"value": "21",
+											"type": "text"
+										},
+										{
+											"key": "producto_id",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "cantidad",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{comanda}}item",
+									"host": [
+										"{{comanda}}item"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/item",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{cervecero}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{comanda}}item",
+									"host": [
+										"{{comanda}}item"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/item/{item_id}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/item/{item_id}",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{bartender}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{comanda}}item/3",
+									"host": [
+										"{{comanda}}item"
+									],
+									"path": [
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Cliente",
+					"item": [
+						{
+							"name": "/order/{code}",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{cliente}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{comanda}}order/059b1",
+									"host": [
+										"{{comanda}}order"
+									],
+									"path": [
+										"059b1"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "/pedidos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{mozo}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mesa_id",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "cliente_id",
+									"value": "2",
+									"type": "text"
+								}
+							],
+							"options": {
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{comanda}}pedidos",
+							"host": [
+								"{{comanda}}pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/pedidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "token",
+								"value": "{{socio}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}pedidos",
+							"host": [
+								"{{comanda}}pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/pedidos/{id}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{mozo}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}pedidos/21",
+							"host": [
+								"{{comanda}}pedidos"
+							],
+							"path": [
+								"21"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "/users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}users",
+							"host": [
+								"{{comanda}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}login",
+							"host": [
+								"{{comanda}}login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Sectores",
+			"item": [
+				{
+					"name": "/sectores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{comanda}}sectores",
+							"host": [
+								"{{comanda}}sectores"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "/productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{comanda}}productos",
+							"host": [
+								"{{comanda}}productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/productos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "descripcion",
+									"value": "Pizza Muzzarella",
+									"type": "text"
+								},
+								{
+									"key": "sector_id",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "330",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}productos",
+							"host": [
+								"{{comanda}}productos"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "/cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Mr",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Customer",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "cliente@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}cliente",
+							"host": [
+								"{{comanda}}cliente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{comanda}}cliente",
+							"host": [
+								"{{comanda}}cliente"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Mesas",
+			"item": [
+				{
+					"name": "/mesas",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "descripcion",
+									"value": "Mesa 6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{comanda}}mesas",
+							"host": [
+								"{{comanda}}mesas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/mesas/{id}",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{mozo}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{comanda}}mesas/1",
+							"host": [
+								"{{comanda}}mesas"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/mesas/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{socio}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}mesas/4",
+							"host": [
+								"{{comanda}}mesas"
+							],
+							"path": [
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Reportes",
+			"item": [
+				{
+					"name": "/reportes/orders/sector",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}reportes/orders/sector",
+							"host": [
+								"{{comanda}}reportes"
+							],
+							"path": [
+								"orders",
+								"sector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reportes/orders/sector/employee",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}reportes/orders/sector/employee",
+							"host": [
+								"{{comanda}}reportes"
+							],
+							"path": [
+								"orders",
+								"sector",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reportes/orders/employee",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{comanda}}reportes/orders/employee",
+							"host": [
+								"{{comanda}}reportes"
+							],
+							"path": [
+								"orders",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

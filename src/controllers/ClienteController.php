@@ -7,10 +7,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 use App\Models\Persona;
-use App\Models\Socio;
+use App\Models\Cliente;
 use App\Models\User;
 
-class SocioController
+class ClienteController
 {
 
     private $container;
@@ -23,8 +23,8 @@ class SocioController
 
     public function getAll(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        $rta = Socio::select('socios.id', 'personas.id', 'personas.nombre', 'personas.apellido', 'personas.email')
-                    ->join('personas', 'personas.id', '=', 'socios.persona_id')
+        $rta = Cliente::select('clientes.id', 'personas.id', 'personas.nombre', 'personas.apellido', 'personas.email')
+                    ->join('personas', 'personas.id', '=', 'clientes.persona_id')
                     ->get();
         //$body = $request->getParsedBody();
         $response->getBody()->write(json_encode($rta));
@@ -34,9 +34,9 @@ class SocioController
     public function getOneById(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = $args["id"];
-        $socio = Socio::select('socios.id', 'socios.persona_id', 'personas.nombre', 'personas.apellido', 'personas.email')
-                    ->join('personas', 'personas.id', '=', 'socios.persona_id')
-                    ->where('socios.id', $id)
+        $socio = Cliente::select('clientes.id', 'clientes.persona_id', 'personas.nombre', 'personas.apellido', 'personas.email')
+                    ->join('personas', 'personas.id', '=', 'clientes.persona_id')
+                    ->where('clientes.id', $id)
                     ->get();
         //var_dump($socio)[0];
         if ($socio !== null) {
@@ -60,7 +60,7 @@ class SocioController
             $response->getBody()->write(json_encode(array('message' => 'sin parametros definidos')));
         }
         if (isset($persona)) {
-            $socio = Socio::where('id_persona', $persona->id)->with('persona')->first();
+            $socio = Cliente::where('id_persona', $persona->id)->with('persona')->first();
             $response->getBody()->write(json_encode($socio));
         } else {
             $response->getBody()->write(json_encode(array('message' => 'Partner does not exist')));
@@ -93,10 +93,10 @@ class SocioController
                             $model->save();
                             $persona = Persona::where('nombre', $body["nombre"])->where('apellido', $body["apellido"])->get();
                         }
-                        $socio = new Socio;
+                        $socio = new Cliente;
                         $socio->persona_id = $persona[0]['id'];
                         $socio->save();
-                        $response->getBody()->write('Partner Saved');
+                        $response->getBody()->write('Customer has been saved');
                     }
                 }else{
                     $response->getBody()->write(json_encode(array('message' => 'Email is required')));
@@ -112,7 +112,7 @@ class SocioController
 
     public function edit(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        $socio = Socio::find($args["id"]);
+        $socio = Cliente::find($args["id"]);
         if (isset($socio)) {
             $persona = Persona::find($socio->id_persona);
             $body = $request->getParsedBody();

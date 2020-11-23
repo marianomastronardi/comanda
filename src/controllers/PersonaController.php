@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 use App\Models\Persona;
+use App\Models\User;
 
 class PersonaController
 {
@@ -24,15 +25,15 @@ class PersonaController
         $rta = Persona::get();
         //$body = $request->getParsedBody();
         $response->getBody()->write(json_encode($rta));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response; //->withHeader('Content-Type', 'application/json');
     }
 
     public function getOneById(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $persona = Persona::find($args["id"]);
-        if($persona)$response->getBody()->write(json_encode($persona));
-        return $response->withHeader('Content-Type', 'application/json');
-        return $persona;
+        if ($persona) $response->getBody()->write(json_encode($persona));
+        return $response; //->withHeader('Content-Type', 'application/json');
+        //return $persona;
     }
 
     public function getOneByName(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -48,32 +49,60 @@ class PersonaController
             json_encode(array('message' => 'sin parametros definidos'));
         }
         if (isset($persona)) $response->getBody()->write(json_encode($persona));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response; //->withHeader('Content-Type', 'application/json');
     }
 
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $body = $request->getParsedBody();
-        $persona = new Persona;
-        $persona->nombre = $body["nombre"];
-        $persona->apellido = $body["apellido"];
-        $existe = Persona::where('nombre', $body["nombre"])->where('apellido', $body["apellido"])->first();
-        if(!isset($existe))$persona->save();
-        (!isset($existe)) ? $response->getBody()->write('Person Saved') : $response->getBody()->write('Person could not be saved');
-        return $response->withHeader('Content-Type', 'application/json');
+        $nombre = $body["nombre"] ?? '';
+        $apellido = $body["apellido"] ?? '';
+        $email = $body["email"]??'';
+
+        if (strlen($nombre) > 0) {
+            if (strlen($apellido) > 0) {
+                if (strlen($email) > 0) {
+                    $user = User::find($email);
+                    if ($user == null) {
+                        $response->getBody()->write(json_encode(array('message' => "Wrong email")));
+                    } else {
+                        $persona = new Persona;
+                        $persona->nombre = $nombre;
+                        $persona->apellido = $apellido;
+                        $persona->email = $email;
+                        $existe = Persona::where('nombre', $nombre)->where('apellido', $apellido)->get();
+                        //var_dump($existe);
+                        if (!isset($existe[0])) {
+                            $persona->save();
+                            $response->getBody()->write('Person Saved');
+                        } else {
+                            $response->getBody()->write('Person could not be saved');
+                        }
+                    }
+                } else {
+                    $response->getBody()->write(json_encode(array('message' => 'Email is required')));
+                }
+            } else {
+                $response->getBody()->write(json_encode(array('message' => 'Apellido is required')));
+            }
+        } else {
+            $response->getBody()->write(json_encode(array('message' => 'Nombre is required')));
+        }
+        return $response; //->withHeader('Content-Type', 'application/json');
     }
 
     public function edit(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $persona = Persona::find($args["id"]);
-        if(isset($persona)){
+        if (isset($persona)) {
             $body = $request->getParsedBody();
-            if($body["nombre"]) $persona->nombre = $body["nombre"];
-            if($body["apellido"]) $persona->apellido = $body["apellido"];
+            if ($body["nombre"]) $persona->nombre = $body["nombre"];
+            if ($body["apellido"]) $persona->apellido = $body["apellido"];
             $persona->save();
             $response->getBody()->write('Person Updated');
+        } else {
+            $response->getBody()->write('Person does not exist');
         }
-        return $response->withHeader('Content-Type', 'application/json');
-    } 
-
+        return $response; //->withHeader('Content-Type', 'application/json');
+    }
 }

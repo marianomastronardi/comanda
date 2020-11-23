@@ -6,18 +6,15 @@ class Pedido extends Model{
 
     protected $primaryKey = 'id';
 
-    public function sector()
-    {
-        return $this->belongsTo('App\Models\Sector');
-    }
 
-    public function employee()
+    public function mesa()
     {
-        return $this->belongsTo('App\Models\Empleado');
+        return $this->belongsTo('App\Models\Mesa');
     }
 
     public function estado()
     {
         return $this->belongsTo('App\Models\EstadoPedido');
     }
+
 }

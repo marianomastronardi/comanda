@@ -17,12 +17,14 @@ use App\Controllers\SectorController;
 use App\Controllers\ProductoController;
 use App\Controllers\ClienteController;
 use App\Controllers\MesaController;
+use App\Controllers\ReportesController;
 //Middlewares
 use App\Middlewares\MozoMiddleware;
 use App\Middlewares\JsonMiddleware;
 use App\Middlewares\AuthMiddleware;
 use App\Middlewares\SocioMiddleware;
 use App\Middlewares\ClienteMiddleware;
+use App\Middlewares\AdminMiddleware;
 //DB
 use Config\Database;
 use Illuminate\Container\Container;
@@ -116,6 +118,13 @@ $app->group('/cliente', function (RouteCollectorProxy $group) {
     $group->get('/{nombre}/[{apellido}]', PersonaController::class . ":getOneByName");
     $group->put('/{id}', PersonaController::class . ":edit");
 })->add(new JsonMiddleware); 
+
+/**Reportes */
+$app->group('/reportes', function (RouteCollectorProxy $group) {
+    $group->get('/orders/sector',  PedidoController::class . ":getOrderBySector");
+    $group->get('/orders/sector/employee',  PedidoController::class . ":getOrderBySectorEmployee");
+    $group->get('/orders/employee', PedidoController::class . ":getOrderByEmployee");
+})->add(new JsonMiddleware)->add(new AuthMiddleware())->add(new AdminMiddleware()); 
 
 $app->run(); 
 

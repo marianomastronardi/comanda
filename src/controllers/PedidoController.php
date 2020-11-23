@@ -26,6 +26,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use DateInterval;
 use DateTime;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Capsule\Manager as DBM;
 
 class PedidoController
 {
@@ -117,29 +118,30 @@ class PedidoController
     {
         $code = $args['code'];
 
-        $pedidos = Pedido::select('pedidos.id'
-                                , 'mesas.descripcion'
-                                , 'personas.nombre as NombreCliente'
-                                , 'personas.apellido as ApellidoCliente'
-                                , 'estado_pedidos.descripcion as EstadoItem'
-                                , 'productos.descripcion'
-                                , 'items.monto'
-                                , 'items.delivery_time'
-                                )
-                        //->join('estado_pedidos', 'estado_pedidos.id', '=', 'pedidos.estado_id')
-                        ->join('mesas', 'mesas.id', '=', 'pedidos.mesa_id')
-                        ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-                        ->join('personas', 'personas.id', '=', 'clientes.persona_id')
-                        ->join('items', 'items.pedido_id', '=', 'pedidos.id')
-                        ->join('estado_pedidos','estado_pedidos.id' , '=', 'items.estado_id')
-                        ->join('productos', 'productos.id', '=', 'items.producto_id')
-                        ->join('sectors', 'sectors.id', '=', 'items.sector_id')
-                        //->join('empleados', 'empleados.id', '=', 'items.empleado_id')
-                        //->join('personas p', DB::raw('p.id as pid'), '=', 'empleados.persona_id')
-                        ->where('pedidos.codigo', $code)
-                        ->get(); 
-                        
-                        $response->getBody()->write(json_encode($pedidos));
+        $pedidos = Pedido::select(
+            'pedidos.id',
+            'mesas.descripcion',
+            'personas.nombre as NombreCliente',
+            'personas.apellido as ApellidoCliente',
+            'estado_pedidos.descripcion as EstadoItem',
+            'productos.descripcion',
+            'items.monto',
+            'items.delivery_time'
+        )
+            //->join('estado_pedidos', 'estado_pedidos.id', '=', 'pedidos.estado_id')
+            ->join('mesas', 'mesas.id', '=', 'pedidos.mesa_id')
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('personas', 'personas.id', '=', 'clientes.persona_id')
+            ->join('items', 'items.pedido_id', '=', 'pedidos.id')
+            ->join('estado_pedidos', 'estado_pedidos.id', '=', 'items.estado_id')
+            ->join('productos', 'productos.id', '=', 'items.producto_id')
+            ->join('sectors', 'sectors.id', '=', 'items.sector_id')
+            //->join('empleados', 'empleados.id', '=', 'items.empleado_id')
+            //->join('personas p', DB::raw('p.id as pid'), '=', 'empleados.persona_id')
+            ->where('pedidos.codigo', $code)
+            ->get();
+
+        $response->getBody()->write(json_encode($pedidos));
         return $response;
     }
 
@@ -232,6 +234,8 @@ class PedidoController
         $delivery_time = $body['delivery_time'] ?? '';
         $enPreparacion = EstadoPedido::where('descripcion', 'EN PREPARACION')->get();
         $enPreparacion = $enPreparacion[0]['id'] ?? '';
+        $pendiente = EstadoPedido::where('descripcion', 'PENDIENTE')->get();
+        $pendiente = $pendiente[0]['id'] ?? '';
         //var_dump($enPreparacion[0]['id']);
         //die();
         if (strlen($item_id) > 0) {
@@ -249,18 +253,33 @@ class PedidoController
                         $sector = $empleado[0]['sector_id'];
                         $item = Item::find($item_id);
                         if ($item !== null) {
-                            if ($item->sector_id == $sector) {
-                                $deliveryTime = new DateTime();
-                                $deliveryTime->add(new DateInterval('PT' . $delivery_time . 'M'));
-                                $empleado_id = $empleado[0]['id'];
+                            if ($item->estado_id == $pendiente) {
+                                if ($item->sector_id == $sector) {
+                                    $deliveryTime = new DateTime();
+                                    $deliveryTime->add(new DateInterval('PT' . $delivery_time . 'M'));
+                                    $empleado_id = $empleado[0]['id'];
 
-                                $item->delivery_time = $deliveryTime;
-                                $item->empleado_id = $empleado_id;
-                                $item->estado_id = $enPreparacion;
-                                $item->save();
-                                $response->getBody()->write(json_encode(array('message' => 'Item has been changed successfuly')));
+                                    $item->delivery_time = $deliveryTime;
+                                    $item->empleado_id = $empleado_id;
+                                    $item->estado_id = $enPreparacion;
+                                    $item->save();
+
+                                     //busco los items de mi pedido para saber si soy el ultimo listo para servir
+                                     $count = Item::where('pedido_id', $item->pedido_id)->where('estado_id', $pendiente)->count();
+                                     if ($count == 0) {
+                                         //cierro el pedido, le cambio el estado
+                                         $pedido = Pedido::find($item->pedido_id);
+                                         $pedido->estado_id = $enPreparacion;
+                                         $max = Item::where('pedido_id', $item->pedido_id)->max('delivery_time');
+                                         $pedido->delivery_time = $max;
+                                         $pedido->save();
+                                     }
+                                    $response->getBody()->write(json_encode(array('message' => 'Item has been changed successfuly')));
+                                } else {
+                                    $response->getBody()->write(json_encode(array('message' => 'You are not allowed to set this sector item')));
+                                }
                             } else {
-                                $response->getBody()->write(json_encode(array('message' => 'You are not allowed to set this sector item')));
+                                $response->getBody()->write(json_encode(array('message' => 'Wrong Status')));
                             }
                         } else {
                             $response->getBody()->write(json_encode(array('message' => 'Item does not exist')));
@@ -286,6 +305,8 @@ class PedidoController
         $item_id = $args['item_id'] ?? '';
         $enPreparacion = EstadoPedido::where('descripcion', 'EN PREPARACION')->get();
         $enPreparacion = $enPreparacion[0]['id'] ?? '';
+        $pendiente = EstadoPedido::where('descripcion', 'PENDIENTE')->get();
+        $pendiente = $pendiente[0]['id'] ?? '';
         $ready = EstadoPedido::where('descripcion', 'LISTO PARA SERVIR')->get();
         $ready = $ready[0]['id'] ?? '';
 
@@ -305,27 +326,33 @@ class PedidoController
                     $sector = $empleado[0]['sector_id'];
                     $item = Item::find($item_id);
                     if ($item !== null) {
-                        if ($item->sector_id == $sector) {
-                            //var_dump($item->empleado_id);
-                            //var_dump($empleado[0]['persona_id']);
-                            if ($item->empleado_id == $empleado[0]['id']) {
-                                $item->estado_id = $ready;
-                                $item->save();
-                                //busco los items de mi pedido para saber si soy el ultimo listo para servir
-                                $count = Item::where('pedido_id', $item->pedido_id)->where('estado_id', $enPreparacion)->count();
-                                if ($count == 0) {
-                                    //cierro el pedido, le cambio el estado
-                                    $pedido = Pedido::find($item->pedido_id);
-                                    $pedido->estado_id = $ready;
-                                    $pedido->deleted_at = new DateTime();
-                                    $pedido->save();
+                        if ($item->estado_id == $enPreparacion) {
+                            if ($item->sector_id == $sector) {
+                                //var_dump($item->empleado_id);
+                                //var_dump($empleado[0]['persona_id']);
+                                if ($item->empleado_id == $empleado[0]['id']) {
+                                    $item->estado_id = $ready;
+                                    $item->save();
+                                    //busco los items de mi pedido para saber si soy el ultimo listo para servir
+                                    $countenp = Item::where('pedido_id', $item->pedido_id)->where('estado_id', $enPreparacion)->count();
+                                    $countp = $count = Item::where('pedido_id', $item->pedido_id)->where('estado_id', $pendiente)->count();
+                                    $count = $countenp  + $countp;
+                                    if ($count == 0) {
+                                        //cierro el pedido, le cambio el estado
+                                        $pedido = Pedido::find($item->pedido_id);
+                                        $pedido->estado_id = $ready;
+                                        $pedido->deleted_at = new DateTime();
+                                        $pedido->save();
+                                    }
+                                    $response->getBody()->write(json_encode(array('message' => 'Item has been closed successfuly')));
+                                } else {
+                                    $response->getBody()->write(json_encode(array('message' => 'Employee is not the same who are making the order')));
                                 }
-                                $response->getBody()->write(json_encode(array('message' => 'Item has been closed successfuly')));
                             } else {
-                                $response->getBody()->write(json_encode(array('message' => 'Employee is not the same who are making the order')));
+                                $response->getBody()->write(json_encode(array('message' => 'You are not allowed to set this sector item')));
                             }
                         } else {
-                            $response->getBody()->write(json_encode(array('message' => 'You are not allowed to set this sector item')));
+                            $response->getBody()->write(json_encode(array('message' => 'Wrong Status')));
                         }
                     } else {
                         $response->getBody()->write(json_encode(array('message' => 'Item does not exist')));
@@ -340,6 +367,43 @@ class PedidoController
             $response->getBody()->write(json_encode(array('message' => 'Item is required')));
         }
 
+        return $response;
+    }
+
+    //Reportes
+    public function getOrderBySector(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $results = DBM::table('pedidos')
+                     ->select(DBM::raw('count(*) as qty, items.sector_id'))
+                     ->join('items', 'items.pedido_id', '=', 'pedidos.id')
+                     //->where('status', '<>', 1)
+                     ->groupBy('items.sector_id')
+                     ->get();
+        $response->getBody()->write(json_encode($results));
+        return $response;
+    }
+    
+    public function getOrderBySectorEmployee(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $results = DBM::table('pedidos')
+                     ->select(DBM::raw('count(*) as qty, items.sector_id, items.empleado_id'))
+                     ->join('items', 'items.pedido_id', '=', 'pedidos.id')
+                     //->where('status', '<>', 1)
+                     ->groupBy('items.sector_id','items.empleado_id')
+                     ->get();
+        $response->getBody()->write(json_encode($results));
+        return $response;
+    }
+    
+    public function getOrderByEmployee(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $results = DBM::table('pedidos')
+                     ->select(DBM::raw('count(*) as qty, items.empleado_id'))
+                     ->join('items', 'items.pedido_id', '=', 'pedidos.id')
+                     //->where('status', '<>', 1)
+                     ->groupBy('items.empleado_id')
+                     ->get();
+        $response->getBody()->write(json_encode($results));
         return $response;
     }
 }
